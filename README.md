@@ -34,3 +34,7 @@ Instructors can create courses and the students can enrolled, attend live classe
 ## Why the name BeOnSchool?
  
 The name **BeOnSchool** means **"being in school"** even when you are online. It gives a feeling that students and teachers are always connected and focused on learning, just like in a real school.
+
+
+## BeOnSchool - Initial ERD
+![Initial ERD](public/asset/img/initial_erd.png)
