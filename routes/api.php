@@ -10,6 +10,7 @@ Route::get('/user', function (Request $request) {
 
 Route::controller(AuthController::class)->group(function () {
     Route::prefix('auth')->group(function () {
-        Route::get('register', 'register');
+        Route::post('register', 'register');
+        Route::post('login', 'login');
     });
 });
