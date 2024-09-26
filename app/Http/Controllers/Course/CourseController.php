@@ -7,6 +7,7 @@ use App\Http\Requests\Course\CourseRequest;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
@@ -16,7 +17,13 @@ class CourseController extends Controller
      */
     public function index()
     {
-        return Course::all();
+        // Define a unique cache key
+        $cacheKey = 'courses.all';
+        // Check if the data is cached, if not, execute the query and cache it
+        $courses = Cache::remember($cacheKey, now()->addMinute(10), function () {
+            return Course::all();
+        });
+        return response()->json($courses);
     }
 
     /**
@@ -25,6 +32,7 @@ class CourseController extends Controller
     public function store(CourseRequest $request)
     {
         $user = Auth::user();
+        $thumbnailPath = null;
 
         if ($request->hasFile('thumbnail_url')) {
             $courseThumbnailImgFile = $request->file('thumbnail_url');
@@ -54,6 +62,7 @@ class CourseController extends Controller
                 'duration' => $request->input('duration'),
             ]);
             DB::commit();
+            Cache::forget('courses.all'); // Clear the cache for all courses
             return response()->json(["message" => "Course Created Successful"], 201);
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -61,7 +70,7 @@ class CourseController extends Controller
             return response()->json([
                 "message" => "An error occured. Please try again.",
                 "error" => $exception->getMessage()
-            ], 401);
+            ], 500);
         }
     }
 
