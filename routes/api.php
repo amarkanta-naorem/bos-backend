@@ -5,10 +5,6 @@ use App\Http\Controllers\Course\CourseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:api');
-
 Route::controller(AuthController::class)->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('register', 'register');
@@ -16,11 +12,9 @@ Route::controller(AuthController::class)->group(function () {
     });
 });
 
-Route::controller(CourseController::class)->group(function () {
-    Route::prefix('course')->group(function () {
-        Route::get('all', 'index');
-        Route::middleware('auth:api')->group(function () {
-            Route::post('/', 'store');
-        });
+Route::prefix('course')->group(function () {
+    Route::get('/', [CourseController::class, 'index'])->middleware('throttle:api');;
+    Route::middleware('auth:api')->group(function () {
+        Route::resource('/', CourseController::class)->except('index')->middleware('throttle:api');;
     });
 });
