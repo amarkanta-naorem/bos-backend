@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Course;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\CourseRequest;
+use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,15 +16,16 @@ class CourseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $page = $request->input('page', 5);
         // Define a unique cache key
-        $cacheKey = 'courses.all';
+        $cacheKey = 'courses.all' . $page;
         // Check if the data is cached, if not, execute the query and cache it
-        $courses = Cache::remember($cacheKey, now()->addMinute(10), function () {
-            return Course::all();
+        $courses = Cache::remember($cacheKey, now()->addMinute(10), function () use ($page) {
+            return Course::paginate($page);
         });
-        return response()->json($courses);
+        return CourseResource::collection($courses);
     }
 
     /**
@@ -49,7 +51,7 @@ class CourseController extends Controller
 
         try {
             DB::beginTransaction();
-            Course::create([
+            $course = Course::create([
                 'instructor_id' => $user->id,
                 'title' => $request->input('title'),
                 'slug' => $request->input('slug'),
@@ -63,7 +65,7 @@ class CourseController extends Controller
             ]);
             DB::commit();
             Cache::forget('courses.all'); // Clear the cache for all courses
-            return response()->json(["message" => "Course Created Successful"], 201);
+            return new CourseResource($course);
         } catch (\Exception $exception) {
             DB::rollBack();
             report($exception);
