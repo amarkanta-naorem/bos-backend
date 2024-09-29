@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Course\CourseRequest;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CourseController extends Controller
 {
@@ -27,18 +29,16 @@ class CourseController extends Controller
         });
         return CourseResource::collection($courses);
     }
-
     /**
      * Store a newly created resource in storage.
      */
     public function store(CourseRequest $request)
     {
-        $user = Auth::user();
+        $user = Auth::user();        
+        $slug = Str::slug($request->input('title'));
         $thumbnailPath = null;
-
         if ($request->hasFile('thumbnail_url')) {
             $courseThumbnailImgFile = $request->file('thumbnail_url');
-            $slug = $request->input('slug');
             $username = $user->username;
             $thumbnailOriginalFileName = $courseThumbnailImgFile->getClientOriginalName();
             $courseThumbnailImgFilePath = "courses/{$username}/{$slug}/thumbnail/{$thumbnailOriginalFileName}";
@@ -54,7 +54,7 @@ class CourseController extends Controller
             $course = Course::create([
                 'instructor_id' => $user->id,
                 'title' => $request->input('title'),
-                'slug' => $request->input('slug'),
+                'slug' => $slug,
                 'short_description' => $request->input('short_description'),
                 'long_description' => $request->input('long_description'),
                 'thumbnail_url' => $thumbnailPath,
@@ -63,6 +63,7 @@ class CourseController extends Controller
                 'level' => $request->input('level'),
                 'duration' => $request->input('duration'),
             ]);
+            $course->tags()->attach($request->input('tag'));
             DB::commit();
             Cache::forget('courses.all'); // Clear the cache for all courses
             return new CourseResource($course);

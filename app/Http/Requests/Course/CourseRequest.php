@@ -24,6 +24,7 @@ class CourseRequest extends FormRequest
     {
         return [
             'instructor_id' => 'exists:users,id',
+            'tag' => 'required|exists:tags,id',
             'title' => 'required|string|max:60',
             'short_description' => 'required|string|max:255',
             'long_description' => 'required|string',
