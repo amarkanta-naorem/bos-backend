@@ -31,12 +31,10 @@ class TagController extends Controller
      */
     public function store(TagRequest $request)
     {
-        $slug = Str::slug($request->input('title'));
         try {
             DB::beginTransaction();
             $tag = Tag::create([
                 'title' => $request->input('title'),
-                'slug' => $slug
             ]);
             DB::commit();
             Cache::forget('tags.all');
