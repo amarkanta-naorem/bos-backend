@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Course\CourseController;
+use App\Http\Controllers\Course\CourseEnrollmentController;
 use App\Http\Controllers\Course\CourseSectionContentController;
 use App\Http\Controllers\Course\CourseSectionController;
 use App\Http\Controllers\Tag\TagController;
@@ -15,6 +16,8 @@ Route::prefix('course')->group(function () {
     Route::middleware('auth:api')->group(function () {
         Route::resource('/', CourseController::class)->except('index')->middleware('throttle:api');
     });
+
+    Route::resource('enrollment', CourseEnrollmentController::class)->middleware('throttle:api');
 
     Route::prefix('section')->group(function () {
         Route::get('/', [CourseSectionController::class, 'index'])->middleware('throttle:api');

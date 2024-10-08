@@ -21,6 +21,8 @@ class CourseEnrollment extends Model
         'enrolled_at' => 'datetime',
     ];
 
+    public $timestamps = false;
+
     public function learner()
     {
         return $this->belongsTo(User::class, 'learner_id');

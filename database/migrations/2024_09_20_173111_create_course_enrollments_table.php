@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('learner_id');
             $table->unsignedBigInteger('course_id');
-            $table->integer('enrollment_id')->unique();
+            $table->unsignedBigInteger('enrollment_id')->unique();
             $table->timestamp('enrolled_at');
             $table->enum('status', ['in_progress', 'completed', 'dropped'])->default('in_progress');
             $table->foreign('learner_id')->references('id')->on('users');
