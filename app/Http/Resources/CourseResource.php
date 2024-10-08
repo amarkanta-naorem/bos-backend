@@ -29,7 +29,7 @@ class CourseResource extends JsonResource
             'instructor' => new UserResource($this->instructor),
             'enrollments_count' => $this->courseEnrollments()->count(),
             'tags' => TagResource::collection($this->tags),
-            // 'sections' => CourseSectionResource::collection($this->courseSections),
+            'sections' => CourseSectionResource::collection($this->courseSections),
             // 'learning_paths' => CourseLearningPathResource::collection($this->learningPaths),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
