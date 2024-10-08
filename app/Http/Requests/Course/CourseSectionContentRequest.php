@@ -4,7 +4,7 @@ namespace App\Http\Requests\Course;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CourseSectionRequest extends FormRequest
+class CourseSectionContentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +23,9 @@ class CourseSectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'course_id' => 'required|exists:courses,id',
+            "course_section_id" => "required|exists:course_sections,id",
             'title' => 'required|string|max:60',
+            'content' => 'required',
             'order' => 'required'
         ];
     }

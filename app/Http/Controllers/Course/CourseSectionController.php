@@ -19,7 +19,7 @@ class CourseSectionController extends Controller
     public function index(Request $request)
     {
         $page = $request->input('page', 5);
-        $cacheKey = 'CourseSection.all' . $page;
+        $cacheKey = 'CourseSections.all' . $page;
         $courseSections = Cache::remember($cacheKey, now()->addMinute(10), function () use ($page) {
             return CourseSection::paginate($page);
         });
@@ -39,7 +39,6 @@ class CourseSectionController extends Controller
                 'course_id' => $request->input('course_id'),
                 'title' => $request->input('title'),
                 'slug' => $slug,
-                'description' => $request->input('description'),
                 'order' => $request->input('order'),
             ]);
             DB::commit();

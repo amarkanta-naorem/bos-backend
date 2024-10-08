@@ -16,7 +16,6 @@ class CourseSection extends Model
         'course_id',
         'title',
         'slug',
-        'description',
         'order',
         'created_by',
         'updated_by',

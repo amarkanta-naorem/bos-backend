@@ -19,8 +19,8 @@ class CourseSectionResource extends JsonResource
             'course_id' => $this->course_id,
             'title' => $this->title,
             'slug' => $this->slug,
-            'description' => $this->description,
-            'order' => $this->order
+            'order' => $this->order,
+            'contents' => CourseSectionContentResource::collection($this->courseSectionContents),
         ];
     }
 }

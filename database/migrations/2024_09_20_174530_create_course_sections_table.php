@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('course_id');
             $table->string('title');
             $table->string('slug')->unique();
-            $table->string('description');
             $table->float('order');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
