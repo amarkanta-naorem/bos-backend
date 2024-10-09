@@ -1,4 +1,4 @@
-# BeOnSchool Backend Development (bos-backend)
+# BeOnSchool Backend Development
 
 **BeOnSchool** is a Learning Management System (LMS) where instructors can create courses and the students can enroll.
 
