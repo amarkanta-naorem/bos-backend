@@ -22,7 +22,7 @@ class CourseEnrollmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "learner_id" => "required|exists:users,id",
+            "learner_id" => "exists:users,id",
             "course_id" => "required|exists:courses,id",
         ];
     }

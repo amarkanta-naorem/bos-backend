@@ -15,9 +15,9 @@ Route::prefix('course')->group(function () {
     Route::get('/', [CourseController::class, 'index'])->middleware('throttle:api');
     Route::middleware('auth:api')->group(function () {
         Route::resource('/', CourseController::class)->except('index')->middleware('throttle:api');
+        Route::resource('enrollment', CourseEnrollmentController::class)->middleware('throttle:api');
     });
 
-    Route::resource('enrollment', CourseEnrollmentController::class)->middleware('throttle:api');
 
     Route::prefix('section')->group(function () {
         Route::get('/', [CourseSectionController::class, 'index'])->middleware('throttle:api');

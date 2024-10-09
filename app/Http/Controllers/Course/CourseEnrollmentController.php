@@ -9,6 +9,7 @@ use App\Models\CourseEnrollment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class CourseEnrollmentController extends Controller
 {
@@ -25,6 +26,7 @@ class CourseEnrollmentController extends Controller
      */
     public function store(CourseEnrollmentRequest $request)
     {
+        $user = Auth::user();
         $pin = mt_rand(100000000000, 999999999999);
         $enrollmentId = str_shuffle($pin);
 
@@ -33,7 +35,7 @@ class CourseEnrollmentController extends Controller
         try {
             DB::beginTransaction();
             $courseEnrollment = CourseEnrollment::create([
-                "learner_id" => $request->input("learner_id"),
+                "learner_id" => $user->id,
                 "course_id" => $request->input("course_id"),
                 "enrollment_id" => $enrollmentId,
                 "enrolled_at" => $enrolledAt->toDateTimeString()
