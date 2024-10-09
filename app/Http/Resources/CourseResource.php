@@ -14,6 +14,10 @@ class CourseResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        // Count the total number of course_section_contents for all sections in this course
+        $sectionContentCount = $this->courseSections->sum(function ($section) {
+            return $section->courseSectionContents()->count(); // Assuming a hasMany relationship exists
+        });
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -25,6 +29,7 @@ class CourseResource extends JsonResource
             'tags' => TagResource::collection($this->tags),
             'sections' => CourseSectionResource::collection($this->courseSections),
             // 'learning_paths' => CourseLearningPathResource::collection($this->learningPaths),
+            'section_content_count' => $sectionContentCount,
             'instructor' => new UserResource($this->instructor),
             'enrollments_count' => $this->courseEnrollments()->count(),
             'is_premium' => $this->is_premium,
